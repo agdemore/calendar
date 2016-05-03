@@ -1,0 +1,89 @@
+html {
+    font-family: sans-serif;
+}
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+
+}
+
+
+*::-webkit-scrollbar {
+    width: 3px;
+    height: 7px;
+    background-color: transparent;
+    border-left: 1px solid #cacaca;
+}
+*::-webkit-scrollbar-thumb {
+    background-color: #B7B7B7;
+}
+
+#app {
+
+}
+
+#app-top {
+
+}
+.app-top-inner {
+    padding: 20px 10px;
+    font-size: 2em;
+}
+.app-top-inner-month {
+    text-align: center;
+}
+
+#app-calendar {
+
+}
+.app-calendar-inner {
+
+}
+.app-calendar-inner-days {
+    float: left;
+    width: 100%;
+    border-bottom: 1px solid #cacaca;
+}
+.app-calendar-inner-day {
+    float: left;
+    text-align: right;
+    padding: 50px 5px 0 0;
+}
+.app-calendar-inner-month-days {
+    float: left;
+    width: 100%;
+    height: 100%;
+    border-bottom: 1px solid #cacaca;
+}
+.app-calendar-inner-month-day {
+    float: left;
+    text-align: right;
+    /*padding: 5px 5px 50px 0;*/
+    border-right: 1px solid #cacaca;
+    border-bottom: 1px solid #cacaca;
+}
+.app-calendar-inner-month-day:hover {
+    background-color: rgba(202, 202, 202, 0.43)
+}
+.day-inner {
+    position: relative;
+    right: 10px;
+    top: 10px;
+    padding: 5px;
+}
+.prev,
+.next {
+    background-color: rgba(202, 202, 202, 0.43);
+}
+.cur {
+
+}
+.today {
+
+}
+.today span {
+    border-radius: 7px;
+    background-color: red;
+    color: #fff;
+}
