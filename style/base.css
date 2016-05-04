@@ -23,28 +23,32 @@ body {
 
 }
 
-#app-top {
-
-}
-.app-top-inner {
-    padding: 20px 10px;
-    font-size: 2em;
-}
-.app-top-inner-month {
-    text-align: center;
-}
-.app-top-inner-year {
-    text-align: center;
-}
-.app-top-inner button {
-    border: 0;
-    background-color: #fff;
-    font-size: 1em;
-}
 
 #app-calendar {
 
 }
+
+.app-inner {
+
+}
+.app-top-inner {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;;
+    font-size: 2em;
+    padding: 10px 20px;
+}
+.app-top-inner button {
+    background-color: #fff;
+    border: 0;
+    font-size: 20px;
+    outline: none;
+}
+.app-top-inner-date {
+
+}
+
+
 .app-calendar-inner {
 
 }

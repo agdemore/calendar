@@ -33,9 +33,14 @@ const days = {
 }
 
 
-let AppTop = React.createClass({
+let MonthCalendar = React.createClass({
     getInitialState: function () {
-        return {month: '', day: '', year: '', date: ''};
+        return {
+            month: '',
+            day: '',
+            year: '',
+            date: ''
+        };
     },
     componentDidMount: function() {
         let now = new Date();
@@ -44,34 +49,62 @@ let AppTop = React.createClass({
         let current_day = now.getDay();
         let current_year = now.getFullYear();
         this.setState({
-            month: months[current_mounth],
+            month: current_mounth,
             day: days[current_day],
             year: current_year,
             date: current_date
         })
     },
-    scrollMounth: function() {
-
+    switchMonth: function(direction, event) {
+        if (direction == 'left') {
+            if (this.state.month == 0) {
+                this.setState({
+                    month: (this.state.month + 11) % 12,
+                    year: this.state.year - 1
+                });
+            } else {
+                this.setState({
+                    month: (this.state.month + 11) % 12
+                });
+            }
+        } else {
+            if (this.state.month == 11) {
+                this.setState({
+                    month: (this.state.month + 1) % 12,
+                    year: this.state.year + 1
+                });
+            } else {
+                this.setState({
+                    month: (this.state.month + 1) % 12
+                })
+            }
+        }
     },
-    scrollYear: function(direction) {
-        // if (direction == 'left') {
-        //     this.setState(this.state.year - 1);
-        // } else {
-        //     this.setState(this.state.year + 1);
-        // }
+    today: function(event) {
+        let now = new Date();
+        let current_mounth = now.getMonth();
+        let current_year = now.getFullYear();
+        this.setState({
+            month: current_mounth,
+            year: current_year
+        });
     },
     render: function () {
+        let left = this.switchMonth.bind(this, 'left');
         return (
-            <div className='app-top-inner'>
-                <div className='app-top-inner-month'>
-                    <button>&lsaquo;</button>
-                    <span>{this.state.month}</span>
-                    <button>&rsaquo;</button>
+            <div className='app-inner'>
+                <div className='app-top-inner'>
+                    <div className='app-top-inner-date'>
+                        <span>{months[this.state.month]} {this.state.year}</span>
+                    </div>
+                    <div className='app-top-inner-date'>
+                        <button onClick={left}>&lsaquo;</button>
+                        <button onClick={this.today}>today</button>
+                        <button onClick={this.switchMonth}>&rsaquo;</button>
+                    </div>
                 </div>
-                <div className='app-top-inner-year'>
-                    <button onClick={this.scrollYear('left')}>&lsaquo;</button>
-                    <span>{this.state.year}</span>
-                    <button onClick={this.scrollYear('right')}>&rsaquo;</button>
+                <div className='calendar'>
+                    <MonthBox month={this.state.month} year={this.state.year}/>
                 </div>
             </div>
         );
@@ -79,61 +112,56 @@ let AppTop = React.createClass({
 });
 
 let MonthBox = React.createClass({
-    getInitialState: function() {
-        return {
-            days: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
-            daysInMonth: []
-        };
-    },
-    makeCalendar: function() {
+    makeCalendar: function(month, year) {
+        let lastDayOfMonth = new Date(year, month + 1,0).getDate();
+        let date = new Date(year, month, lastDayOfMonth);
+        let weekDayOfLastMonthDay = new Date(year, month, lastDayOfMonth).getDay();
+        let weekDayOfFirstMonthDay = new Date(year, month, 1).getDay();
         let now = new Date();
-        let lastDayOfMonth = new Date(now.getFullYear(), now.getMonth()+ 1,0).getDate();
-        let weekDayOfLastMonthDay = new Date(now.getFullYear(), now.getMonth(), lastDayOfMonth).getDay();
-        let weekDayOfFirstMonthDay = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
-        console.log(lastDayOfMonth, weekDayOfLastMonthDay, weekDayOfFirstMonthDay);
         let dd = [];
 
-        let lastDay = new Date(now.getFullYear(), now.getMonth(),0).getDate();
+        let lastDay = new Date(year, month, 0).getDate();
 
         console.log(lastDay);
-        if (weekDayOfLastMonthDay != 0) {
-            for (let  i = weekDayOfFirstMonthDay; i > 1 ; i--)
+        if (weekDayOfFirstMonthDay != 0) {
+            for (let i = weekDayOfFirstMonthDay ; i > 1 ; i--)
                 dd.push(['prev', lastDay - i + 2]);
-        } else { // если первый день месяца выпадает на воскресенье, то требуется 7 пустых клеток
+        } else {
             for (let  i = 6; i > 0; i--)
-                dd.push(lastDay - 1);
+                dd.push(['prev', lastDay - i + 2]);
         }
 
         for (let  i = 1; i <= lastDayOfMonth; i++) {
-            if (i != now.getDate()) {
-                dd.push(['cur',i]);
-            } else {
-                dd.push(['today',i]);  // сегодняшней дате можно задать стиль CSS
-            }
+            dd.push(['cur',i]);
         }
 
         let l = dd.length;
         for (let i = 1; i <= 42 - l; i++)
             dd.push(['next', i])
-        console.log(dd);
-        this.setState({daysInMonth: dd})
-    },
-    componentDidMount: function() {
-        this.makeCalendar();
+        return dd
     },
     render: function() {
         let i = 0;
+        let days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+        let daysInMonth = this.makeCalendar(this.props.month, this.props.year);
+        let m = this.props.month,
+            y = this.props.year
         return (
             <div className="app-calendar-inner">
                 <div className="app-calendar-inner-days">
-                    {this.state.days.map(function(day){
+                    {days.map(function(day){
                         return <div className='app-calendar-inner-day' key={day}>{day.substring(0,3)}</div>
                     })}
                 </div>
                 <div className="app-calendar-inner-month-days">
-                    {this.state.daysInMonth.map(function(day){
+                    {daysInMonth.map(function(day){
                         i += 1;
-                        let divClassName = 'app-calendar-inner-month-day ' + day[0];
+                        let divClassName = '';
+                        if (day[1] == new Date().getDate() && day[0] == 'cur' && m == new Date().getMonth() && y == new Date().getFullYear()) {
+                            divClassName = 'app-calendar-inner-month-day today';
+                        } else {
+                            divClassName = 'app-calendar-inner-month-day ' + day[0];
+                        }
                         return <div className={divClassName} key={i}>
                             <span className='day-inner' >{day[1]}</span>
                         </div>
@@ -158,15 +186,14 @@ let DayBox = React.createClass({
     render: function() {
         return (
             <div className="app-container-inner">
-                <FriendsList data={this.state.data} />
+                <h1>Hi</h1>
             </div>
         );
     }
 });
 
 
-ReactDom.render(<AppTop/>, document.getElementById('app-top'));
-ReactDom.render(<MonthBox />, document.getElementById('app-calendar'));
+ReactDom.render(<MonthCalendar />, document.getElementById('app-calendar'));
 
 //
 // let DialogsBox = React.createClass({
