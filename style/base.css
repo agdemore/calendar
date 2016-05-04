@@ -33,6 +33,14 @@ body {
 .app-top-inner-month {
     text-align: center;
 }
+.app-top-inner-year {
+    text-align: center;
+}
+.app-top-inner button {
+    border: 0;
+    background-color: #fff;
+    font-size: 1em;
+}
 
 #app-calendar {
 

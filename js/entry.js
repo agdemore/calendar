@@ -50,11 +50,28 @@ let AppTop = React.createClass({
             date: current_date
         })
     },
+    scrollMounth: function() {
+
+    },
+    scrollYear: function(direction) {
+        // if (direction == 'left') {
+        //     this.setState(this.state.year - 1);
+        // } else {
+        //     this.setState(this.state.year + 1);
+        // }
+    },
     render: function () {
         return (
             <div className='app-top-inner'>
                 <div className='app-top-inner-month'>
-                    {this.state.date} {this.state.month} {this.state.year} {this.state.day}
+                    <button>&lsaquo;</button>
+                    <span>{this.state.month}</span>
+                    <button>&rsaquo;</button>
+                </div>
+                <div className='app-top-inner-year'>
+                    <button onClick={this.scrollYear('left')}>&lsaquo;</button>
+                    <span>{this.state.year}</span>
+                    <button onClick={this.scrollYear('right')}>&rsaquo;</button>
                 </div>
             </div>
         );
@@ -110,7 +127,7 @@ let MonthBox = React.createClass({
             <div className="app-calendar-inner">
                 <div className="app-calendar-inner-days">
                     {this.state.days.map(function(day){
-                        return <div className='app-calendar-inner-day' key={day}>{day}</div>
+                        return <div className='app-calendar-inner-day' key={day}>{day.substring(0,3)}</div>
                     })}
                 </div>
                 <div className="app-calendar-inner-month-days">
