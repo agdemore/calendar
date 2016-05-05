@@ -163,7 +163,7 @@ let MonthBox = React.createClass({
                             divClassName = 'app-calendar-inner-month-day ' + day[0];
                         }
                         return <div className={divClassName} key={i}>
-                            <span className='day-inner' >{day[1]}</span>
+                            <DayBox day={day[1]} month={this.props.month} year={this.props.year} />
                         </div>
                     })}
                 </div>
@@ -174,19 +174,19 @@ let MonthBox = React.createClass({
 
 
 let DayBox = React.createClass({
-    getInitialState: function() {
-        return {data: []};
-    },
-    componentDidMount: function() {
-
-    },
-    componentWillUnmount: function () {
-
+    onDoubleClick: function (e) {
+        // only left mouse button
+        if (e.button !== 0) return;
+        $(ReactDom.findDOMNode(this)).append("<div class='day-tip'>New event</div>");
+        e.stopPropagation();
+        e.preventDefault();
     },
     render: function() {
         return (
-            <div className="app-container-inner">
-                <h1>Hi</h1>
+            <div className="calendar-day" onMouseDown={this.onDoubleClick}>
+                <div className='day-inner'>
+                    <span>{this.props.day}</span>
+                </div>
             </div>
         );
     }

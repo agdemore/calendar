@@ -19,20 +19,24 @@ $(document).on('click', ".message", function() {
 var appWidth = $(window).width();
 var appHeight = $(window).height();
 
-$('.app-calendar-inner-day').outerWidth(appWidth/7);
-$('.app-calendar-inner-month-day').outerWidth(appWidth/7);
+const nameOfWeekDayBox = $('.app-calendar-inner-day');
+const dayOfMonthBox = $('.app-calendar-inner-month-day');
 
-$('.app-calendar-inner-month-day').outerHeight((appHeight - 77 - 70)/6);
+nameOfWeekDayBox.outerWidth(true);
+dayOfMonthBox.outerWidth(true);
+
+nameOfWeekDayBox.outerWidth(appWidth/7, true);
+dayOfMonthBox.outerWidth(appWidth/7, true);
+dayOfMonthBox.outerHeight((appHeight - 70 - 57)/6, true);
 
 
 $(window).resize(function() {
     var wWidth = $(window).width();
     var wHeight = $(window).height();
 
-    $('.app-calendar-inner-day').outerWidth(wWidth/7);
-    $('.app-calendar-inner-month-day').outerWidth(wWidth/7);
-
-    $('.app-calendar-inner-month-day').outerHeight((wHeight - 77 - 70)/6);
+    nameOfWeekDayBox.outerWidth(wWidth/7, true);
+    dayOfMonthBox.outerWidth(wWidth/7, true);
+    dayOfMonthBox.outerHeight((wHeight - 70 - 57)/6, true);
 });
 
 $('.show-left-menu').click(function() {
