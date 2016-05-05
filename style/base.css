@@ -20,7 +20,8 @@ body {
 }
 
 #app {
-
+    -webkit-user-select: none;
+    cursor: default;
 }
 
 
@@ -53,37 +54,54 @@ body {
 
 }
 .app-calendar-inner-days {
-    float: left;
-    width: 100%;
     border-bottom: 1px solid #cacaca;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
 .app-calendar-inner-day {
-    float: left;
     text-align: right;
     padding: 50px 5px 0 0;
 }
 .app-calendar-inner-month-days {
-    float: left;
-    width: 100%;
-    height: 100%;
     border-bottom: 1px solid #cacaca;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
 .app-calendar-inner-month-day {
-    float: left;
-    text-align: right;
-    /*padding: 5px 5px 50px 0;*/
-    border-right: 1px solid #cacaca;
     border-bottom: 1px solid #cacaca;
+    border-right: 1px solid #cacaca;
+    cursor: pointer;
+}
+.app-calendar-inner-month-day-flat {
+    text-align: right;
+    border: 1px solid rgba(202, 202, 202, 0.41);
+    margin: 5px;
+    box-shadow: 4px 4px 7px -1px rgba(0, 0, 0, 0.2);
 }
 .app-calendar-inner-month-day:hover {
     background-color: rgba(202, 202, 202, 0.43)
 }
+.calendar-day {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    height: 100%;
+}
 .day-inner {
-    position: relative;
-    right: 10px;
-    top: 10px;
+    text-align: right;
     padding: 5px;
 }
+.day-inner span {
+    padding: 3px 8px;
+}
+.day-tip {
+    text-align: center;
+    background-color: rgba(46, 153, 195, 0.58);
+}
+
 .prev,
 .next {
     background-color: rgba(202, 202, 202, 0.43);
@@ -92,7 +110,8 @@ body {
 
 }
 .today {
-
+    /*position: absolute;*/
+    height: 300px;
 }
 .today span {
     border-radius: 7px;
