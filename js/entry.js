@@ -91,6 +91,8 @@ let MonthCalendar = React.createClass({
     },
     render: function () {
         let left = this.switchMonth.bind(this, 'left');
+        let createMonth = createMonth = <MonthBox month={this.state.month} year={this.state.year}/>
+
         return (
             <div className='app-inner'>
                 <div className='app-top-inner'>
@@ -104,7 +106,7 @@ let MonthCalendar = React.createClass({
                     </div>
                 </div>
                 <div className='calendar'>
-                    <MonthBox month={this.state.month} year={this.state.year}/>
+                    {createMonth}
                 </div>
             </div>
         );
@@ -112,6 +114,28 @@ let MonthCalendar = React.createClass({
 });
 
 let MonthBox = React.createClass({
+    setDaysSize: function () {
+            let appWidth = jQuery(window).width();
+            let appHeight = jQuery(window).height();
+
+            const nameOfWeekDayBox = jQuery('.app-calendar-inner-day');
+            const dayOfMonthBox = jQuery('.app-calendar-inner-month-day');
+
+            nameOfWeekDayBox.outerWidth(true);
+            dayOfMonthBox.outerWidth(true);
+
+            nameOfWeekDayBox.outerWidth(appWidth/7, true);
+            dayOfMonthBox.outerWidth(appWidth/7, true);
+            dayOfMonthBox.outerHeight((appHeight - 70 - 57)/6, true);
+            jQuery(window).resize(function() {
+                let wWidth = jQuery(window).width();
+                let wHeight = jQuery(window).height();
+
+                nameOfWeekDayBox.outerWidth(wWidth/7, true);
+                dayOfMonthBox.outerWidth(wWidth/7, true);
+                dayOfMonthBox.outerHeight((wHeight - 70 - 57)/6, true);
+            });
+    },
     makeCalendar: function(month, year) {
         let lastDayOfMonth = new Date(year, month + 1,0).getDate();
         let date = new Date(year, month, lastDayOfMonth);
@@ -143,9 +167,15 @@ let MonthBox = React.createClass({
     render: function() {
         let i = 0;
         let days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
-        let daysInMonth = this.makeCalendar(this.props.month, this.props.year);
+        console.log('month box',this.props);
+
+        let daysInMonth = daysInMonth = this.makeCalendar(this.props.month, this.props.year);
+
         let m = this.props.month,
-            y = this.props.year
+            y = this.props.year;
+
+        this.setDaysSize();
+
         return (
             <div className="app-calendar-inner">
                 <div className="app-calendar-inner-days">
@@ -163,10 +193,11 @@ let MonthBox = React.createClass({
                             divClassName = 'app-calendar-inner-month-day ' + day[0];
                         }
                         return <div className={divClassName} key={i}>
-                            <DayBox day={day[1]} month={this.props.month} year={this.props.year} />
+                            <DayBox day={day[1]} month={m} year={y} />
                         </div>
                     })}
                 </div>
+                <script>{this.setDaysSizeAfterResize}</script>
             </div>
         );
     }
@@ -181,12 +212,87 @@ let DayBox = React.createClass({
         e.stopPropagation();
         e.preventDefault();
     },
+    onClick: function(e) {
+        ReactDom.render(<DaySingle d={this.props.day} m={this.props.month} y={this.props.year} />, document.getElementById('day-over-all'));
+    },
     render: function() {
         return (
-            <div className="calendar-day" onMouseDown={this.onDoubleClick}>
+            <div className="calendar-day" onDoubleClick={this.onDoubleClick} onClick={this.onClick}>
                 <div className='day-inner'>
                     <span>{this.props.day}</span>
                 </div>
+            </div>
+        );
+    }
+});
+
+let DaySingle = React.createClass({
+    getInitialState: function () {
+        return {
+            month: this.props.m,
+            day: this.props.d,
+            year: this.props.y
+        };
+    },
+    onExit: function (e) {
+        ReactDom.unmountComponentAtNode(document.getElementById('day-over-all'))
+        e.stopPropagation();
+        e.preventDefault();
+    },
+    slide: function (direction) {
+        let dim = {0:31, 1:28, 2:31, 3:30, 4:31, 5:30, 6:31, 7:31, 8:30, 9:31, 10:30, 11:31}
+        if ((this.state.year - 2016) % 4 == 0) {
+            dim[1] = 29;
+        } else {
+            dim[1] = 28;
+        }
+        console.log(dim[1]);
+        if (direction == 'left') {
+            let prevDay = this.state.day - 1;
+            let prevMonth = this.state.month;
+            let prevYear = this.state.year;
+            if (prevDay < 1) {
+                prevMonth = prevMonth - 1;
+                if (prevMonth < 0) {
+                    prevMonth = 11;
+                    prevYear = prevYear - 1;
+                }
+                prevDay = dim[prevMonth];
+            }
+            this.setState({
+                year: prevYear,
+                month: prevMonth,
+                day: prevDay
+            });
+        } else {
+            let nextDay = this.state.day + 1;
+            let nextMonth = this.state.month;
+            let nextYear = this.state.year;
+            if (nextDay > dim[this.state.month]) {
+                nextDay = 1;
+                nextMonth = nextMonth + 1;
+                if (nextMonth > 11) {
+                    nextMonth = 0;
+                    nextYear = nextYear + 1;
+                }
+            }
+            this.setState({
+                year: nextYear,
+                month: nextMonth,
+                day: nextDay
+            });
+        }
+    },
+    render: function () {
+        let left = this.slide.bind(this, 'left');
+        return (
+            <div className='day-background'>
+                <div className='arrow' onClick={left}>&lsaquo;</div>
+                <div className='day-background-inner'>
+                    <div className='day-inner-close' onClick={this.onExit}>&#10006;</div>
+                    <div className='day-inner-title'>{this.state.day} {months[this.state.month]} {this.state.year}</div>
+                </div>
+                <div className='arrow' onClick={this.slide}>&rsaquo;</div>
             </div>
         );
     }
