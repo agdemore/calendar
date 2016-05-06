@@ -16,28 +16,28 @@ $(document).on('click', ".message", function() {
 });
 
 // to display chat window on start
-var appWidth = $(window).width();
-var appHeight = $(window).height();
-
-const nameOfWeekDayBox = $('.app-calendar-inner-day');
-const dayOfMonthBox = $('.app-calendar-inner-month-day');
-
-nameOfWeekDayBox.outerWidth(true);
-dayOfMonthBox.outerWidth(true);
-
-nameOfWeekDayBox.outerWidth(appWidth/7, true);
-dayOfMonthBox.outerWidth(appWidth/7, true);
-dayOfMonthBox.outerHeight((appHeight - 70 - 57)/6, true);
-
-
-$(window).resize(function() {
-    var wWidth = $(window).width();
-    var wHeight = $(window).height();
-
-    nameOfWeekDayBox.outerWidth(wWidth/7, true);
-    dayOfMonthBox.outerWidth(wWidth/7, true);
-    dayOfMonthBox.outerHeight((wHeight - 70 - 57)/6, true);
-});
+// var appWidth = $(window).width();
+// var appHeight = $(window).height();
+//
+// const nameOfWeekDayBox = $('.app-calendar-inner-day');
+// const dayOfMonthBox = $('.app-calendar-inner-month-day');
+//
+// nameOfWeekDayBox.outerWidth(true);
+// dayOfMonthBox.outerWidth(true);
+//
+// nameOfWeekDayBox.outerWidth(appWidth/7, true);
+// dayOfMonthBox.outerWidth(appWidth/7, true);
+// dayOfMonthBox.outerHeight((appHeight - 70 - 57)/6, true);
+//
+//
+// $(window).resize(function() {
+//     var wWidth = $(window).width();
+//     var wHeight = $(window).height();
+//
+//     nameOfWeekDayBox.outerWidth(wWidth/7, true);
+//     dayOfMonthBox.outerWidth(wWidth/7, true);
+//     dayOfMonthBox.outerHeight((wHeight - 70 - 57)/6, true);
+// });
 
 $('.show-left-menu').click(function() {
     $('.left-menu').toggleClass('hide-element');
