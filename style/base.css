@@ -156,6 +156,27 @@ body {
     font-size: 2em;
     border-bottom: 1px solid #cacaca;
 }
+.day-inner-hours {
+    height: 92%;
+    overflow-y: scroll;
+}
+.day-hour {
+
+}
+.day-hour-inner {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 10px 0;
+    border-bottom: 1px solid #cacaca;
+}
+.day-time {
+    padding: 0 10px 0 5px;
+    width: 50px;
+}
+.day-event {
+    width: 100%;
+}
 .arrow {
     font-size: 6em;
     color: #fff;
