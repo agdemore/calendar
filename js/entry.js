@@ -212,7 +212,6 @@ let MonthBox = React.createClass({
                         </div>
                     })}
                 </div>
-                <script>{this.setDaysSizeAfterResize}</script>
             </div>
         );
     }
@@ -300,12 +299,29 @@ let DaySingle = React.createClass({
     },
     render: function () {
         let left = this.slide.bind(this, 'left');
+        let hours24 = [];
+        for (var i = 0; i < 24; i++) {
+            hours24.push(i);
+        }
+        let d = this.state.day,
+            m = this.state.month,
+            y = this.state.year;
+
         return (
             <div className='day-background'>
                 <div className='arrow' onClick={left}>&lsaquo;</div>
                 <div className='day-background-inner'>
                     <div className='day-inner-close' onClick={this.onExit}>&#10006;</div>
                     <div className='day-inner-title'>{this.state.day} {months[this.state.month]} {this.state.year}</div>
+                    <div className='day-inner-hours'>
+                        {hours24.map(function(hour) {
+                            return (
+                                <div className='day-hour' key={hour}>
+                                    <HourBox hour={hour} day={d} month={m} year={y} />
+                                </div>
+                            );
+                        })}
+                    </div>
                 </div>
                 <div className='arrow' onClick={this.slide}>&rsaquo;</div>
             </div>
@@ -313,6 +329,20 @@ let DaySingle = React.createClass({
     }
 });
 
+
+let HourBox = React.createClass({
+    createEvent: function () {
+
+    },
+    render: function () {
+        return (
+            <div className='day-hour-inner'>
+                <div className='day-time'>{this.props.hour}:00</div>
+                <div className='day-event' onDoubleClick={this.createEvent}></div>
+            </div>
+        )
+    }
+});
 
 ReactDom.render(<MonthCalendar />, document.getElementById('app-calendar'));
 
