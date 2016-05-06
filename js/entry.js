@@ -192,8 +192,23 @@ let MonthBox = React.createClass({
                         } else {
                             divClassName = 'app-calendar-inner-month-day ' + day[0];
                         }
+                        let newM = m,
+                            newY = y;
+                        if (day[0] == 'next') {
+                            newM = m + 1;
+                            if (newM > 11) {
+                                newM = 0;
+                                newY = y + 1;
+                            }
+                        } else if (day[0] == 'prev') {
+                            newM = m - 1;
+                            if (newM < 0) {
+                                newM = 11;
+                                newY = y - 1;
+                            }
+                        }
                         return <div className={divClassName} key={i}>
-                            <DayBox day={day[1]} month={m} year={y} />
+                            <DayBox day={day[1]} month={newM} year={newY} />
                         </div>
                     })}
                 </div>
