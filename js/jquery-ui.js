@@ -1,3 +1,5 @@
+'use strict';
+
 var $ = require('jquery');
 
 var originWidth = 900;
@@ -13,6 +15,26 @@ $(document).on('click', ".message", function() {
     chat.chatId = $(this).attr('chat_id');
     $(this).attr('pagination', 50);
     //add method to delete class unread message
+});
+
+
+
+$(document).on('click', ".app-calendar-inner-month-day", function() {
+    let hours = $('.day-inner-hours');
+    let mainWindow = $('.day-background-inner');
+    let top = $('.day-inner-close');
+    let day = $('.day-inner-title');
+
+
+    hours.height(mainWindow.height() - top.height() - day.height());
+});
+$(window).resize(function() {
+    let hours = $('.day-inner-hours');
+    let mainWindowRe = $('.day-background-inner').height();
+    let topRe = $('.day-inner-close').height();
+    let dayRe = $('.day-inner-title').height();
+
+    hours.height(mainWindowRe - topRe - dayRe);
 });
 
 // to display chat window on start
