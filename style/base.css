@@ -157,7 +157,7 @@ body {
     border-bottom: 1px solid #cacaca;
 }
 .day-inner-hours {
-    height: 92%;
+    /*height: 92%;*/
     overflow-y: scroll;
 }
 .day-hour {
