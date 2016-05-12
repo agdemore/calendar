@@ -33,6 +33,42 @@ const days = {
 }
 
 
+let LeftMenu = React.createClass({
+    appShowSwitcher: function (menu) {
+        if (menu == 'day') {
+            ReactDom.render(<DaySingle />, document.getElementById('app-calendar'))
+        } else if (menu == 'month') {
+            ReactDom.render(<MonthCalendar />, document.getElementById('app-calendar'));
+        } else if (menu == 'year') {
+
+        } else {
+            return;
+        }
+    },
+    render: function () {
+        let showDay = this.appShowSwitcher.bind(this, 'day');
+        let showMonth = this.appShowSwitcher.bind(this, 'month');
+        let showYear = this.appShowSwitcher.bind(this, 'year');
+
+        return (
+            <div className='app-left-menu-inner'>
+                <div className='app-left-menu-inner-buttons'>
+                    <div className='app-left-menu-inner-buttons-inner' onClick={showDay}>
+                        <div><span>D</span></div>
+                    </div>
+                    <div className='app-left-menu-inner-buttons-inner' onClick={showMonth}>
+                        <div><span>M</span></div>
+                    </div>
+                    <div className='app-left-menu-inner-buttons-inner' onClick={showYear}>
+                        <div><span>Y</span></div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+});
+
+
 let MonthCalendar = React.createClass({
     getInitialState: function () {
         return {
@@ -91,7 +127,7 @@ let MonthCalendar = React.createClass({
     },
     render: function () {
         let left = this.switchMonth.bind(this, 'left');
-        let createMonth = createMonth = <MonthBox month={this.state.month} year={this.state.year}/>
+        let createView = <MonthBox month={this.state.month} year={this.state.year}/>
 
         return (
             <div className='app-inner'>
@@ -106,7 +142,7 @@ let MonthCalendar = React.createClass({
                     </div>
                 </div>
                 <div className='calendar'>
-                    {createMonth}
+                    {createView}
                 </div>
             </div>
         );
@@ -115,26 +151,25 @@ let MonthCalendar = React.createClass({
 
 let MonthBox = React.createClass({
     setDaysSize: function () {
-            let appWidth = jQuery(window).width();
-            let appHeight = jQuery(window).height();
+        var appWidth = jQuery(window).outerWidth(true) - jQuery('#app-left-menu').outerWidth(true);
+        var appHeight = jQuery(window).height();
 
-            const nameOfWeekDayBox = jQuery('.app-calendar-inner-day');
-            const dayOfMonthBox = jQuery('.app-calendar-inner-month-day');
+        const nameOfWeekDayBox = jQuery('.app-calendar-inner-day');
+        const dayOfMonthBox = jQuery('.app-calendar-inner-month-day');
 
-            nameOfWeekDayBox.outerWidth(true);
-            dayOfMonthBox.outerWidth(true);
+        nameOfWeekDayBox.innerWidth(appWidth/7);
+        dayOfMonthBox.outerWidth(appWidth/7, true);
+        dayOfMonthBox.outerHeight((appHeight - 70 - 57)/6, true);
 
-            nameOfWeekDayBox.outerWidth(appWidth/7, true);
-            dayOfMonthBox.outerWidth(appWidth/7, true);
-            dayOfMonthBox.outerHeight((appHeight - 70 - 57)/6, true);
-            jQuery(window).resize(function() {
-                let wWidth = jQuery(window).width();
-                let wHeight = jQuery(window).height();
 
-                nameOfWeekDayBox.outerWidth(wWidth/7, true);
-                dayOfMonthBox.outerWidth(wWidth/7, true);
-                dayOfMonthBox.outerHeight((wHeight - 70 - 57)/6, true);
-            });
+        jQuery(window).resize(function() {
+            var wWidth = jQuery(window).outerWidth(true) - jQuery('#app-left-menu').outerWidth(true);
+            var wHeight = jQuery(window).height();
+
+            nameOfWeekDayBox.innerWidth(wWidth/7);
+            dayOfMonthBox.outerWidth(wWidth/7, true);
+            dayOfMonthBox.outerHeight((wHeight - 70 - 57)/6, true);
+        });
     },
     makeCalendar: function(month, year) {
         let lastDayOfMonth = new Date(year, month + 1,0).getDate();
@@ -217,41 +252,134 @@ let MonthBox = React.createClass({
     }
 });
 
-
+//------------ NEED TO DO --------------------
 let DayBox = React.createClass({
+    getInitialState: function () {
+        return {
+            events: []
+        };
+    },
     onDoubleClick: function (e) {
         // only left mouse button
-        if (e.button !== 0) return;
-        $(ReactDom.findDOMNode(this)).append("<div class='day-tip'>New event</div>");
-        e.stopPropagation();
-        e.preventDefault();
+        // if (e.button !== 0) return;
+        // // ReactDom.render(<Event />, document.getElementById('day-events'))
+        // let ev = React.createElement(Event);
+        // console.log(ev);
+        // $(ReactDom.findDOMNode(this)).append(ev);  //"<div class='day-tip'>New event</div>");
+        // e.stopPropagation();
+        // e.preventDefault();
+        console.log(this.state.events);
+        let newEvent = this.state.events;
+        newEvent.push('new');
+        console.log(newEvent);
+        this.setState({events: newEvent})
     },
-    onClick: function(e) {
-        ReactDom.render(<DaySingle d={this.props.day} m={this.props.month} y={this.props.year} />, document.getElementById('day-over-all'));
+    addEvent: function () {
+        // choose local or not
+    },
+    loadEventsFromServer: function () {
+        // load events from server
     },
     render: function() {
+        let evs = this.state.events;
         return (
-            <div className="calendar-day" onDoubleClick={this.onDoubleClick} onClick={this.onClick}>
+            <div className="calendar-day" onDoubleClick={this.onDoubleClick} >
                 <div className='day-inner'>
                     <span>{this.props.day}</span>
+                </div>
+                <div className='day-events'>
+                    {evs.map(function (event) {
+                        return (
+                            <div>
+                                <Event e={event} />
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
         );
     }
 });
+//------------ NEED TO DO --------------------
+let NewEventForm = React.createClass({
+    getInitialState: function() {
+        return {
+            title: '',
+            text: '',
+            dateStart: '',
+            dateEnd: '',
+            place: ''
+        };
+    },
+    handleTitleChange: function(e) {
+        this.setState({author: e.target.value});
+    },
+    handleCommentChange: function(e) {
+        this.setState({text: e.target.value});
+    },
+    handleSubmit: function(e) {
+        e.preventDefault();
+        var author = this.state.author.trim();
+        var text = this.state.text.trim();
+        if (!text || !author) {
+            return;
+        }
+        this.props.onCommentSubmit({author: author, text: text});
+        this.setState({author: '', text: ''});
+    },
+    render: function() {
+        return (
+            <form className="commentForm" onSubmit={this.handleSubmit}>
+                <input
+                    type="text"
+                    placeholder="Title..."
+                    value={this.state.author}
+                    onChange={this.handleTitleChange}
+                />
+                <input
+                    type="text"
+                    placeholder="Comment..."
+                    value={this.state.text}
+                    onChange={this.handleCommentChange}
+                />
+                <input
+                    type="date"
+                    placeholder="Comment..."
+                    value={this.state.text}
+                    onChange={this.handleCommentChange}
+                />
+                <input
+                    type="date"
+                    placeholder="Comment..."
+                    value={this.state.text}
+                    onChange={this.handleCommentChange}
+                />
+                <input type="submit" value="Add" />
+            </form>
+        );
+    }
+});
+
+//------------ NEED TO DO --------------------
+let Event = React.createClass({
+    render: function() {
+        return (
+            <div className="day-tip">
+                {this.props.e}
+            </div>
+        );
+    }
+});
+
 
 let DaySingle = React.createClass({
     getInitialState: function () {
+        let now = new Date();
         return {
-            month: this.props.m,
-            day: this.props.d,
-            year: this.props.y
+            month: now.getMonth(),
+            day: now.getDate(),
+            year: now.getFullYear()
         };
-    },
-    onExit: function (e) {
-        ReactDom.unmountComponentAtNode(document.getElementById('day-over-all'))
-        e.stopPropagation();
-        e.preventDefault();
     },
     slide: function (direction) {
         let dim = {0:31, 1:28, 2:31, 3:30, 4:31, 5:30, 6:31, 7:31, 8:30, 9:31, 10:30, 11:31}
@@ -297,6 +425,11 @@ let DaySingle = React.createClass({
             });
         }
     },
+    setSize: function () {
+        let h = jQuery('.day-background-inner').innerHeight();
+        let t = jQuery('.day-inner-hours').height(h - jQuery('.day-inner-title').height())
+        console.log(t);
+    },
     render: function () {
         let left = this.slide.bind(this, 'left');
         let hours24 = [];
@@ -307,12 +440,18 @@ let DaySingle = React.createClass({
             m = this.state.month,
             y = this.state.year;
 
+        this.setSize();
+
         return (
             <div className='day-background'>
-                <div className='arrow' onClick={left}>&lsaquo;</div>
                 <div className='day-background-inner'>
-                    <div className='day-inner-close' onClick={this.onExit}>&#10006;</div>
-                    <div className='day-inner-title'>{this.state.day} {months[this.state.month]} {this.state.year}</div>
+                    <div className='day-inner-title'>
+                        <div className='arrow' onClick={left}>&lsaquo;</div>
+                        <div className='day-inner-title-inner'>
+                            {this.state.day} {months[this.state.month]} {this.state.year}
+                        </div>
+                        <div className='arrow' onClick={this.slide}>&rsaquo;</div>
+                    </div>
                     <div className='day-inner-hours'>
                         {hours24.map(function(hour) {
                             return (
@@ -323,7 +462,6 @@ let DaySingle = React.createClass({
                         })}
                     </div>
                 </div>
-                <div className='arrow' onClick={this.slide}>&rsaquo;</div>
             </div>
         );
     }
@@ -335,15 +473,19 @@ let HourBox = React.createClass({
 
     },
     render: function () {
+        let hr = React.createElement('hr');
         return (
             <div className='day-hour-inner'>
                 <div className='day-time'>{this.props.hour}:00</div>
-                <div className='day-event' onDoubleClick={this.createEvent}></div>
+                <div className='day-event' onDoubleClick={this.createEvent}>
+                    {hr}
+                </div>
             </div>
         )
     }
 });
 
+ReactDom.render(<LeftMenu />, document.getElementById('app-left-menu'));
 ReactDom.render(<MonthCalendar />, document.getElementById('app-calendar'));
 
 //

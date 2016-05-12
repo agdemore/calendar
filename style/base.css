@@ -22,11 +22,38 @@ body {
 #app {
     -webkit-user-select: none;
     cursor: default;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-content: stretch;
+    height: 100%;
 }
 
+#app-left-menu {
+    border-right: 1px solid #cacaca;
+}
+.app-left-menu-inner {
+
+}
+.app-left-menu-inner-buttons {
+    display: flex;
+    flex-direction: column;
+}
+.app-left-menu-inner-buttons-inner {
+    width: 60px;
+    height: 60px;
+    border-bottom: 1px solid #cacaca;
+}
+.app-left-menu-inner-buttons-inner div {
+    padding: 20px;
+    text-align: center;
+}
+.app-left-menu-inner-buttons-inner div span {
+
+}
 
 #app-calendar {
-
+    width: 100%;
 }
 
 .app-inner {
@@ -129,12 +156,6 @@ body {
     cursor: default;
 }
 .day-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -142,19 +163,18 @@ body {
     z-index: 500;
 }
 .day-background-inner {
-    position: relative;
-    width: 70%;
-    height: 70%;
     background-color: #fff;
     padding: 10px;
     z-index: 1000;
-}
-.day-inner-close {
-    text-align: right;
+    width: 100%;
 }
 .day-inner-title {
     font-size: 2em;
     border-bottom: 1px solid #cacaca;
+    display: flex;
+}
+.day-inner-title-inner {
+
 }
 .day-inner-hours {
     /*height: 92%;*/
@@ -168,7 +188,7 @@ body {
     flex-direction: row;
     justify-content: flex-start;
     padding: 10px 0;
-    border-bottom: 1px solid #cacaca;
+    /*border-bottom: 1px solid #cacaca;*/
 }
 .day-time {
     padding: 0 10px 0 5px;
@@ -177,8 +197,9 @@ body {
 .day-event {
     width: 100%;
 }
+.day-event hr {
+    border-color: #fff;
+}
 .arrow {
-    font-size: 6em;
-    color: #fff;
     padding: 0 33px;
 }
